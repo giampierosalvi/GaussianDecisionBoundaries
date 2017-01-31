@@ -21,6 +21,10 @@ from matplotlib.colors import LogNorm
 from tkinter import messagebox
 import matplotlib.backends.backend_tkagg as tkagg
 
+def about():
+   aboutText = "GaussianDecisionBoundaries.py\n\n(C) 2017 Giampiero Salvi\n\nDraws the decision boundary between two Gaussian distributions according to the\nMaximum a Posteriori criterium. You can change the a priori probabilities, the\nmean vectors and covariance matrices. You can also show the difference between\nthe two Probability Densidty Functions (PDFs) and display contours of the original PDFs."
+   messagebox.showinfo("About", aboutText)
+
 def redraw(fig):
    # acquie Gaussian parameters
    p = np.array([float(p1.get()), 1.0-float(p1.get())])
@@ -152,7 +156,8 @@ ylimFrame = ttk.Frame(drawW)
 ylimL = ttk.Label(ylimFrame, text='ylim')
 yminW = ttk.Entry(ylimFrame, textvariable=ymin, width=entryWidth)
 ymaxW = ttk.Entry(ylimFrame, textvariable=ymax, width=entryWidth)
-button = ttk.Button(drawW, text="Redraw", command=lambda: redraw(fig))
+redrawButton = ttk.Button(drawW, text="Redraw", command=lambda: redraw(fig))
+aboutButton = ttk.Button(drawW, text="About...", command=about)
 
 # place widgets within gaussian1Frame
 gaussian1Frame.grid(column=0, row=0, columnspan=2, rowspan=6)
@@ -204,7 +209,8 @@ ylimL.pack(side="left")
 yminW.pack(side="left")
 ymaxW.pack(side="left")
 ylimFrame.pack(side="top")
-button.pack(side="top")
+redrawButton.pack(side="top")
+aboutButton.pack(side="top")
 
 # place Gaussian frames within gaussianFrame
 gaussian1Frame.pack(side="left")
