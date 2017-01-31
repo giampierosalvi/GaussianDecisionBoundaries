@@ -19,7 +19,7 @@ from scipy.stats import multivariate_normal
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.colors import LogNorm
 from tkinter import messagebox
-import matplotlib.backends.backend_tkagg as tkagg
+#import matplotlib.backends.backend_tkagg as tkagg
 
 def about():
    aboutText = "GaussianDecisionBoundaries.py\n\n(C) 2017 Giampiero Salvi\n\nDraws the decision boundary between two Gaussian distributions according to the\nMaximum a Posteriori criterium. You can change the a priori probabilities, the\nmean vectors and covariance matrices. You can also show the difference between\nthe two Probability Densidty Functions (PDFs) and display contours of the original PDFs."
@@ -73,14 +73,6 @@ def redraw(fig):
 
 root = tk.Tk()
 root.title("Gaussian Decision Boundaries")
-
-# decides the type of plot
-#plotTypeVar = tk.StringVar()
-#plotTypeVar.set('Decision Boundary')
-#plotTypeW = ttk.Combobox(root, textvariable=plotTypeVar)
-#plotTypeW['values'] = ('Decision Boundary', 'Contours', 'Gaussian 1 colormap', 'Gaussian 2 colormap')
-#plotTypeW.bind('<<ComboboxSelected>>', redraw)
-#plotTypeW.pack()
 
 # Gaussian distribution parameters
 p1 = tk.StringVar()
@@ -144,20 +136,20 @@ s2xW = ttk.Entry(gaussian2Frame, textvariable=s2x, width=entryWidth)
 s2yW = ttk.Entry(gaussian2Frame, textvariable=s2y, width=entryWidth)
 s2xyW = ttk.Entry(gaussian2Frame, textvariable=s2xy, width=entryWidth)
 s2yxW = ttk.Entry(gaussian2Frame, textvariable=s2xy, width=entryWidth)
-drawW = ttk.LabelFrame(controlFrame, text='Drawing')
-drawTypeW = ttk.Combobox(drawW, textvariable=drawType)
+drawingFrame = ttk.LabelFrame(controlFrame, text='Drawing')
+drawTypeW = ttk.Combobox(drawingFrame, textvariable=drawType)
 drawTypeW['values'] = ('Decision Boundary', 'PDF Difference')
-drawPDFContourW = ttk.Checkbutton(drawW, text="Draw PDF Contours", variable=drawPDFContour)
-xlimFrame = ttk.Frame(drawW)
+drawPDFContourW = ttk.Checkbutton(drawingFrame, text="Draw PDF Contours", variable=drawPDFContour)
+xlimFrame = ttk.Frame(drawingFrame)
 xlimL = ttk.Label(xlimFrame, text='xlim')
 xminW = ttk.Entry(xlimFrame, textvariable=xmin, width=entryWidth)
 xmaxW = ttk.Entry(xlimFrame, textvariable=xmax, width=entryWidth)
-ylimFrame = ttk.Frame(drawW)
+ylimFrame = ttk.Frame(drawingFrame)
 ylimL = ttk.Label(ylimFrame, text='ylim')
 yminW = ttk.Entry(ylimFrame, textvariable=ymin, width=entryWidth)
 ymaxW = ttk.Entry(ylimFrame, textvariable=ymax, width=entryWidth)
-redrawButton = ttk.Button(drawW, text="Redraw", command=lambda: redraw(fig))
-aboutButton = ttk.Button(drawW, text="About...", command=about)
+redrawButton = ttk.Button(drawingFrame, text="Redraw", command=lambda: redraw(fig))
+aboutButton = ttk.Button(drawingFrame, text="About...", command=about)
 
 # place widgets within gaussian1Frame
 gaussian1Frame.grid(column=0, row=0, columnspan=2, rowspan=6)
@@ -193,18 +185,10 @@ s2yW.grid(row=5, column=1)
 # place widgets within drawing frame
 drawTypeW.pack(side="top")
 drawPDFContourW.pack(side="top")
-#xlimFrame.grid(column=0, row=0, columnspan=3, rowspan=1)
-#xlimL.grid(row=0, column=0)
-#xminW.grid(row=0, column=1)
-#xmaxW.grid(row=0, column=2)
 xlimL.pack(side="left")
 xminW.pack(side="left")
 xmaxW.pack(side="left")
 xlimFrame.pack(side="top")
-#ylimFrame.grid(column=0, row=0, columnspan=3, rowspan=1)
-#ylimL.grid(row=0, column=0)
-#yminW.grid(row=0, column=1)
-#ymaxW.grid(row=0, column=2)
 ylimL.pack(side="left")
 yminW.pack(side="left")
 ymaxW.pack(side="left")
@@ -218,16 +202,16 @@ gaussian2Frame.pack(side="left")
 
 # place gfame and drawing frame within controlFrame
 gaussianFrame.pack(side="top")
-drawW.pack(side="top")
+drawingFrame.pack(side="top")
 
 controlFrame.pack(side="left")
 
-frame = tk.Frame(root)
+figureFrame = tk.Frame(root)
 fig = plt.Figure()
 canvas = FigureCanvasTkAgg(fig, master=root)
-tkagg.NavigationToolbar2TkAgg(canvas, root)
+#tkagg.NavigationToolbar2TkAgg(canvas, root)
 canvas.show()
 canvas.get_tk_widget().pack(side='top', fill='both', expand=1)
-frame.pack()
+figureFrame.pack()
 redraw(fig)
 root.mainloop()
