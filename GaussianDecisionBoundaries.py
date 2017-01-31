@@ -21,6 +21,7 @@ from matplotlib.colors import LogNorm
 from tkinter import messagebox
 
 def redraw(fig):
+   # acquie Gaussian parameters
    p = np.array([float(p1.get()), 1.0-float(p1.get())])
    mu1 = np.array([float(mu1x.get()), float(mu1y.get())])
    mu2 = np.array([float(mu2x.get()), float(mu2y.get())])
@@ -28,6 +29,7 @@ def redraw(fig):
                   [float(s1xy.get()), float(s1y.get())]])
    s2 = np.array([[float(s2x.get()), float(s2xy.get())],
                   [float(s2xy.get()), float(s2y.get())]])
+   # greate Multivariate Gaussian objects
    try:
       rv1 = multivariate_normal(mu1, s1)
    except ValueError:
@@ -36,6 +38,7 @@ def redraw(fig):
       rv2 = multivariate_normal(mu2, s2)
    except ValueError:
       messagebox.showerror("Error!", "Covariance matrix must be positive semidefinite (Gaussian 2)")
+   # Compute PDF for a certain range of x and y
    xlim = [-1.5, 1.5]
    ylim = [-1.5, 1.5]
    x, y = np.mgrid[xlim[0]:xlim[1]:0.003, ylim[0]:ylim[1]:0.003]
@@ -44,13 +47,18 @@ def redraw(fig):
    rv2g = p[1]*rv2.pdf(pos)
    fig.clf()
    ax = fig.add_subplot(111)
+   # plot Decision Boundary or Difference of PDFs
    if drawType.get() == 'Decision Boundary':
       ax.imshow((rv1g>rv2g).T, origin='lower', extent=[xlim[0], xlim[1], ylim[0], ylim[1]])
    else:
-      ax.imshow((rv1g-rv2g).T, origin='lower', extent=[xlim[0], xlim[1], ylim[0], ylim[1]])
+      cax = ax.imshow((rv1g-rv2g).T, origin='lower', extent=[xlim[0], xlim[1], ylim[0], ylim[1]])
+      fig.colorbar(cax)
    ax.text(mu1[0], mu1[1], '+', color='white', horizontalalignment='center', verticalalignment='center')
    ax.text(mu2[0], mu2[1], 'o', color='white', horizontalalignment='center', verticalalignment='center')
+   ax.set_xlabel('x')
+   ax.set_ylabel('y')
    fig.suptitle('Gaussian Decision Boundaries')
+   # plot contours for each PDF
    if drawPDFContour.get():
       ax.contour(x, y, rv1g, colors='w')
       ax.contour(x, y, rv2g, colors='w')
