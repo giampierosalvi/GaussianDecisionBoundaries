@@ -13,6 +13,7 @@
 # (C) 2017 Giampiero Salvi <giampi@kth.se>
 import tkinter as tk
 import tkinter.ttk as ttk
+from tkinter import font
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.stats import multivariate_normal
@@ -22,7 +23,7 @@ from tkinter import messagebox
 #import matplotlib.backends.backend_tkagg as tkagg
 
 def about():
-   aboutText = "GaussianDecisionBoundaries.py\n\n(C) 2017 Giampiero Salvi\n\nDraws the decision boundary between two Gaussian distributions according to the\nMaximum a Posteriori criterium. You can change the a priori probabilities, the\nmean vectors and covariance matrices. You can also show the difference between\nthe two Probability Densidty Functions (PDFs) and display contours of the original PDFs."
+   aboutText = "GaussianDecisionBoundaries.py\n\n(C) 2017 Giampiero Salvi\n\nDraws the decision boundary between two Gaussian distributions according to the Maximum a Posteriori criterion. You can change the a priori probabilities, the mean vectors and covariance matrices. You can also show the difference between the two Probability Densidty Functions (PDFs) and display contours of the original PDFs."
    messagebox.showinfo("About", aboutText)
 
 def redraw(fig):
@@ -51,18 +52,21 @@ def redraw(fig):
    rv1g = p[0]*rv1.pdf(pos)
    rv2g = p[1]*rv2.pdf(pos)
    fig.clf()
+   #plt.set_cmap('seismic')
    ax = fig.add_subplot(111)
    # plot Decision Boundary or Difference of PDFs
    if drawType.get() == 'Decision Boundary':
-      ax.imshow((rv1g>rv2g).T, origin='lower', extent=[xlim[0], xlim[1], ylim[0], ylim[1]])
+      ax.imshow((rv1g>rv2g).T, origin='lower', extent=[xlim[0], xlim[1], ylim[0], ylim[1]], cmap='bwr')
+      fig.suptitle('Decision Boundary')
    else:
-      cax = ax.imshow((rv1g-rv2g).T, origin='lower', extent=[xlim[0], xlim[1], ylim[0], ylim[1]])
+      maxdata = np.max(np.abs(rv1g-rv2g))
+      cax = ax.imshow((rv1g-rv2g).T, origin='lower', extent=[xlim[0], xlim[1], ylim[0], ylim[1]], cmap='Spectral_r', vmin=-maxdata, vmax=maxdata)
       fig.colorbar(cax)
+      fig.suptitle('PDF_1 - PDF_2')
    ax.text(mu1[0], mu1[1], '+', color='white', horizontalalignment='center', verticalalignment='center')
    ax.text(mu2[0], mu2[1], 'o', color='white', horizontalalignment='center', verticalalignment='center')
    ax.set_xlabel('x')
    ax.set_ylabel('y')
-   fig.suptitle('Gaussian Decision Boundaries')
    # plot contours for each PDF
    if drawPDFContour.get():
       ax.contour(x, y, rv1g, colors='w')
@@ -73,6 +77,9 @@ def redraw(fig):
 
 root = tk.Tk()
 root.title("Gaussian Decision Boundaries")
+# set default font size
+defaultFont = font.nametofont("TkDefaultFont")
+defaultFont.configure(family="helvetica", size=14)
 
 # Gaussian distribution parameters
 p1 = tk.StringVar()
@@ -121,35 +128,35 @@ entryWidth=5
 controlFrame = ttk.Frame(root)
 gaussianFrame = ttk.Frame(controlFrame)
 gaussian1Frame = ttk.LabelFrame(gaussianFrame, text='Gaussian 1')
-p1W = ttk.Entry(gaussian1Frame, textvariable=p1, width=entryWidth)
-mu1xW = ttk.Entry(gaussian1Frame, textvariable=mu1x, width=entryWidth)
-mu1yW = ttk.Entry(gaussian1Frame, textvariable=mu1y, width=entryWidth)
-s1xW = ttk.Entry(gaussian1Frame, textvariable=s1x, width=entryWidth)
-s1yW = ttk.Entry(gaussian1Frame, textvariable=s1y, width=entryWidth)
-s1xyW = ttk.Entry(gaussian1Frame, textvariable=s1xy, width=entryWidth)
-s1yxW = ttk.Entry(gaussian1Frame, textvariable=s1xy, width=entryWidth)
+p1W = ttk.Entry(gaussian1Frame, textvariable=p1, width=entryWidth, font=defaultFont)
+mu1xW = ttk.Entry(gaussian1Frame, textvariable=mu1x, width=entryWidth, font=defaultFont)
+mu1yW = ttk.Entry(gaussian1Frame, textvariable=mu1y, width=entryWidth, font=defaultFont)
+s1xW = ttk.Entry(gaussian1Frame, textvariable=s1x, width=entryWidth, font=defaultFont)
+s1yW = ttk.Entry(gaussian1Frame, textvariable=s1y, width=entryWidth, font=defaultFont)
+s1xyW = ttk.Entry(gaussian1Frame, textvariable=s1xy, width=entryWidth, font=defaultFont)
+s1yxW = ttk.Entry(gaussian1Frame, textvariable=s1xy, width=entryWidth, font=defaultFont)
 gaussian2Frame = ttk.LabelFrame(gaussianFrame, text='Gaussian 2')
 p2W = ttk.Label(gaussian2Frame, text='1-p1')
-mu2xW = ttk.Entry(gaussian2Frame, textvariable=mu2x, width=entryWidth)
-mu2yW = ttk.Entry(gaussian2Frame, textvariable=mu2y, width=entryWidth)
-s2xW = ttk.Entry(gaussian2Frame, textvariable=s2x, width=entryWidth)
-s2yW = ttk.Entry(gaussian2Frame, textvariable=s2y, width=entryWidth)
-s2xyW = ttk.Entry(gaussian2Frame, textvariable=s2xy, width=entryWidth)
-s2yxW = ttk.Entry(gaussian2Frame, textvariable=s2xy, width=entryWidth)
+mu2xW = ttk.Entry(gaussian2Frame, textvariable=mu2x, width=entryWidth, font=defaultFont)
+mu2yW = ttk.Entry(gaussian2Frame, textvariable=mu2y, width=entryWidth, font=defaultFont)
+s2xW = ttk.Entry(gaussian2Frame, textvariable=s2x, width=entryWidth, font=defaultFont)
+s2yW = ttk.Entry(gaussian2Frame, textvariable=s2y, width=entryWidth, font=defaultFont)
+s2xyW = ttk.Entry(gaussian2Frame, textvariable=s2xy, width=entryWidth, font=defaultFont)
+s2yxW = ttk.Entry(gaussian2Frame, textvariable=s2xy, width=entryWidth, font=defaultFont)
 drawingFrame = ttk.LabelFrame(controlFrame, text='Drawing')
-drawTypeW = ttk.Combobox(drawingFrame, textvariable=drawType)
+drawTypeW = ttk.Combobox(drawingFrame, textvariable=drawType, font=defaultFont)
 drawTypeW['values'] = ('Decision Boundary', 'PDF Difference')
 drawPDFContourW = ttk.Checkbutton(drawingFrame, text="Draw PDF Contours", variable=drawPDFContour)
 xlimFrame = ttk.Frame(drawingFrame)
 xlimL = ttk.Label(xlimFrame, text='xlim')
-xminW = ttk.Entry(xlimFrame, textvariable=xmin, width=entryWidth)
-xmaxW = ttk.Entry(xlimFrame, textvariable=xmax, width=entryWidth)
+xminW = ttk.Entry(xlimFrame, textvariable=xmin, width=entryWidth, font=defaultFont)
+xmaxW = ttk.Entry(xlimFrame, textvariable=xmax, width=entryWidth, font=defaultFont)
 ylimFrame = ttk.Frame(drawingFrame)
 ylimL = ttk.Label(ylimFrame, text='ylim')
-yminW = ttk.Entry(ylimFrame, textvariable=ymin, width=entryWidth)
-ymaxW = ttk.Entry(ylimFrame, textvariable=ymax, width=entryWidth)
+yminW = ttk.Entry(ylimFrame, textvariable=ymin, width=entryWidth, font=defaultFont)
+ymaxW = ttk.Entry(ylimFrame, textvariable=ymax, width=entryWidth, font=defaultFont)
 redrawButton = ttk.Button(drawingFrame, text="Redraw", command=lambda: redraw(fig))
-aboutButton = ttk.Button(drawingFrame, text="About...", command=about)
+aboutButton = ttk.Button(controlFrame, text="About...", command=about)
 
 # place widgets within gaussian1Frame
 gaussian1Frame.grid(column=0, row=0, columnspan=2, rowspan=6)
@@ -194,13 +201,13 @@ yminW.pack(side="left")
 ymaxW.pack(side="left")
 ylimFrame.pack(side="top")
 redrawButton.pack(side="top")
-aboutButton.pack(side="top")
 
 # place Gaussian frames within gaussianFrame
 gaussian1Frame.pack(side="left")
 gaussian2Frame.pack(side="left")
 
 # place gfame and drawing frame within controlFrame
+aboutButton.pack(side="top")
 gaussianFrame.pack(side="top")
 drawingFrame.pack(side="top")
 
