@@ -18,6 +18,7 @@ import matplotlib.pyplot as plt
 from scipy.stats import multivariate_normal
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.colors import LogNorm
+from tkinter import messagebox
 
 def redraw(fig):
    p = np.array([float(p1.get()), 1.0-float(p1.get())])
@@ -27,8 +28,14 @@ def redraw(fig):
                   [float(s1xy.get()), float(s1y.get())]])
    s2 = np.array([[float(s2x.get()), float(s2xy.get())],
                   [float(s2xy.get()), float(s2y.get())]])
-   rv1 = multivariate_normal(mu1, s1)
-   rv2 = multivariate_normal(mu2, s2)
+   try:
+      rv1 = multivariate_normal(mu1, s1)
+   except ValueError:
+      messagebox.showerror("Error!", "Covariance matrix must be positive semidefinite (Gaussian 1)")
+   try:
+      rv2 = multivariate_normal(mu2, s2)
+   except ValueError:
+      messagebox.showerror("Error!", "Covariance matrix must be positive semidefinite (Gaussian 2)")
    xlim = [-1.5, 1.5]
    ylim = [-1.5, 1.5]
    x, y = np.mgrid[xlim[0]:xlim[1]:0.003, ylim[0]:ylim[1]:0.003]
