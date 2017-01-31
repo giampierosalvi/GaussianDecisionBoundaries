@@ -19,6 +19,7 @@ from scipy.stats import multivariate_normal
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.colors import LogNorm
 from tkinter import messagebox
+import matplotlib.backends.backend_tkagg as tkagg
 
 def redraw(fig):
    # acquie Gaussian parameters
@@ -39,9 +40,9 @@ def redraw(fig):
    except ValueError:
       messagebox.showerror("Error!", "Covariance matrix must be positive semidefinite (Gaussian 2)")
    # Compute PDF for a certain range of x and y
-   xlim = [-1.5, 1.5]
-   ylim = [-1.5, 1.5]
-   x, y = np.mgrid[xlim[0]:xlim[1]:0.003, ylim[0]:ylim[1]:0.003]
+   xlim = [float(xmin.get()), float(xmax.get())]
+   ylim = [float(ymin.get()), float(ymax.get())]
+   x, y = np.mgrid[xlim[0]:xlim[1]:(xlim[1]-xlim[0])/500.0, ylim[0]:ylim[1]:(ylim[1]-ylim[0])/500.0]
    pos = np.dstack((x, y))
    rv1g = p[0]*rv1.pdf(pos)
    rv2g = p[1]*rv2.pdf(pos)
@@ -94,6 +95,10 @@ s2xy = tk.StringVar()
 # drawing parameters
 drawType = tk.StringVar()
 drawPDFContour = tk.BooleanVar()
+xmin = tk.StringVar()
+xmax = tk.StringVar()
+ymin = tk.StringVar()
+ymax = tk.StringVar()
 
 # set default values
 p1.set('0.5')
@@ -110,58 +115,70 @@ s2y.set('1.0')
 s2xy.set('0.0')
 drawType.set('Decision Boundary')
 drawPDFContour.set(True)
+xmin.set("-1.5")
+xmax.set("1.5")
+ymin.set("-1.5")
+ymax.set("1.5")
 
 # create control widgets
 entryWidth=5
 controlFrame = ttk.Frame(root)
-gframe = ttk.Frame(controlFrame)
-g1W = ttk.LabelFrame(gframe, text='Gaussian 1')
-p1W = ttk.Entry(g1W, textvariable=p1, width=entryWidth)
-mu1xW = ttk.Entry(g1W, textvariable=mu1x, width=entryWidth)
-mu1yW = ttk.Entry(g1W, textvariable=mu1y, width=entryWidth)
-s1xW = ttk.Entry(g1W, textvariable=s1x, width=entryWidth)
-s1yW = ttk.Entry(g1W, textvariable=s1y, width=entryWidth)
-s1xyW = ttk.Entry(g1W, textvariable=s1xy, width=entryWidth)
-s1yxW = ttk.Entry(g1W, textvariable=s1xy, width=entryWidth)
-g2W = ttk.LabelFrame(gframe, text='Gaussian 2')
-p2W = ttk.Label(g2W, text='1-p1')
-mu2xW = ttk.Entry(g2W, textvariable=mu2x, width=entryWidth)
-mu2yW = ttk.Entry(g2W, textvariable=mu2y, width=entryWidth)
-s2xW = ttk.Entry(g2W, textvariable=s2x, width=entryWidth)
-s2yW = ttk.Entry(g2W, textvariable=s2y, width=entryWidth)
-s2xyW = ttk.Entry(g2W, textvariable=s2xy, width=entryWidth)
-s2yxW = ttk.Entry(g2W, textvariable=s2xy, width=entryWidth)
+gaussianFrame = ttk.Frame(controlFrame)
+gaussian1Frame = ttk.LabelFrame(gaussianFrame, text='Gaussian 1')
+p1W = ttk.Entry(gaussian1Frame, textvariable=p1, width=entryWidth)
+mu1xW = ttk.Entry(gaussian1Frame, textvariable=mu1x, width=entryWidth)
+mu1yW = ttk.Entry(gaussian1Frame, textvariable=mu1y, width=entryWidth)
+s1xW = ttk.Entry(gaussian1Frame, textvariable=s1x, width=entryWidth)
+s1yW = ttk.Entry(gaussian1Frame, textvariable=s1y, width=entryWidth)
+s1xyW = ttk.Entry(gaussian1Frame, textvariable=s1xy, width=entryWidth)
+s1yxW = ttk.Entry(gaussian1Frame, textvariable=s1xy, width=entryWidth)
+gaussian2Frame = ttk.LabelFrame(gaussianFrame, text='Gaussian 2')
+p2W = ttk.Label(gaussian2Frame, text='1-p1')
+mu2xW = ttk.Entry(gaussian2Frame, textvariable=mu2x, width=entryWidth)
+mu2yW = ttk.Entry(gaussian2Frame, textvariable=mu2y, width=entryWidth)
+s2xW = ttk.Entry(gaussian2Frame, textvariable=s2x, width=entryWidth)
+s2yW = ttk.Entry(gaussian2Frame, textvariable=s2y, width=entryWidth)
+s2xyW = ttk.Entry(gaussian2Frame, textvariable=s2xy, width=entryWidth)
+s2yxW = ttk.Entry(gaussian2Frame, textvariable=s2xy, width=entryWidth)
 drawW = ttk.LabelFrame(controlFrame, text='Drawing')
 drawTypeW = ttk.Combobox(drawW, textvariable=drawType)
 drawTypeW['values'] = ('Decision Boundary', 'PDF Difference')
 drawPDFContourW = ttk.Checkbutton(drawW, text="Draw PDF Contours", variable=drawPDFContour)
+xlimFrame = ttk.Frame(drawW)
+xlimL = ttk.Label(xlimFrame, text='xlim')
+xminW = ttk.Entry(xlimFrame, textvariable=xmin, width=entryWidth)
+xmaxW = ttk.Entry(xlimFrame, textvariable=xmax, width=entryWidth)
+ylimFrame = ttk.Frame(drawW)
+ylimL = ttk.Label(ylimFrame, text='ylim')
+yminW = ttk.Entry(ylimFrame, textvariable=ymin, width=entryWidth)
+ymaxW = ttk.Entry(ylimFrame, textvariable=ymax, width=entryWidth)
 button = ttk.Button(drawW, text="Redraw", command=lambda: redraw(fig))
 
-# place widgets within Gaussian 1 frame
-g1W.grid(column=0, row=0, columnspan=2, rowspan=6)
-p1L = ttk.Label(g1W, text='p1')
+# place widgets within gaussian1Frame
+gaussian1Frame.grid(column=0, row=0, columnspan=2, rowspan=6)
+p1L = ttk.Label(gaussian1Frame, text='p1')
 p1L.grid(row=0, column=0)
 p1W.grid(row=0, column=1)
-mu1L = ttk.Label(g1W, text='mean1')
+mu1L = ttk.Label(gaussian1Frame, text='mean1')
 mu1L.grid(row=1, column=0, columnspan=2)
 mu1xW.grid(row=2, column=0)
 mu1yW.grid(row=2, column=1)
-s1L = ttk.Label(g1W, text='cov1')
+s1L = ttk.Label(gaussian1Frame, text='cov1')
 s1L.grid(row=3, column=0, columnspan=2)
 s1xW.grid(row=4, column=0)
 s1xyW.grid(row=4, column=1)
 s1yxW.grid(row=5, column=0)
 s1yW.grid(row=5, column=1)
 
-# place widgets within Gaussian 2 frame
-g2W.grid(column=0, row=0, columnspan=2, rowspan=6)
-p2L = ttk.Label(g2W, text='p2 = 1-p1')
+# place widgets within gaussian2Frame
+gaussian2Frame.grid(column=0, row=0, columnspan=2, rowspan=6)
+p2L = ttk.Label(gaussian2Frame, text='p2 = 1-p1')
 p2L.grid(row=0, column=0, columnspan=2)
-mu2L = ttk.Label(g2W, text='mean2')
+mu2L = ttk.Label(gaussian2Frame, text='mean2')
 mu2L.grid(row=1, column=0, columnspan=2)
 mu2xW.grid(row=2, column=0)
 mu2yW.grid(row=2, column=1)
-s2L = ttk.Label(g2W, text='cov2')
+s2L = ttk.Label(gaussian2Frame, text='cov2')
 s2L.grid(row=3, column=0, columnspan=2)
 s2xW.grid(row=4, column=0)
 s2xyW.grid(row=4, column=1)
@@ -171,14 +188,30 @@ s2yW.grid(row=5, column=1)
 # place widgets within drawing frame
 drawTypeW.pack(side="top")
 drawPDFContourW.pack(side="top")
+#xlimFrame.grid(column=0, row=0, columnspan=3, rowspan=1)
+#xlimL.grid(row=0, column=0)
+#xminW.grid(row=0, column=1)
+#xmaxW.grid(row=0, column=2)
+xlimL.pack(side="left")
+xminW.pack(side="left")
+xmaxW.pack(side="left")
+xlimFrame.pack(side="top")
+#ylimFrame.grid(column=0, row=0, columnspan=3, rowspan=1)
+#ylimL.grid(row=0, column=0)
+#yminW.grid(row=0, column=1)
+#ymaxW.grid(row=0, column=2)
+ylimL.pack(side="left")
+yminW.pack(side="left")
+ymaxW.pack(side="left")
+ylimFrame.pack(side="top")
 button.pack(side="top")
 
-# place Gaussian frames within gframe
-g1W.pack(side="left")
-g2W.pack(side="left")
+# place Gaussian frames within gaussianFrame
+gaussian1Frame.pack(side="left")
+gaussian2Frame.pack(side="left")
 
 # place gfame and drawing frame within controlFrame
-gframe.pack(side="top")
+gaussianFrame.pack(side="top")
 drawW.pack(side="top")
 
 controlFrame.pack(side="left")
@@ -186,6 +219,7 @@ controlFrame.pack(side="left")
 frame = tk.Frame(root)
 fig = plt.Figure()
 canvas = FigureCanvasTkAgg(fig, master=root)
+tkagg.NavigationToolbar2TkAgg(canvas, root)
 canvas.show()
 canvas.get_tk_widget().pack(side='top', fill='both', expand=1)
 frame.pack()
