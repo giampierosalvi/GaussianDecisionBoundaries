@@ -6,3 +6,4 @@ I wrote this script as an illustration of a Maximum a Posteriori classifier base
 TODO:
 * update axis range based on Gaussian parameters
 * gracefully complain if the covariance matrix is not definite positive
+* clean up/simplify the code
