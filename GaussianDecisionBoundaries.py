@@ -8,7 +8,7 @@
 #
 # TODO
 # - adjust axis limits depending on the Gaussian parameters
-# - 
+# - clean up and simplify the code
 #
 # (C) 2017 Giampiero Salvi <giampi@kth.se>
 import tkinter as tk
