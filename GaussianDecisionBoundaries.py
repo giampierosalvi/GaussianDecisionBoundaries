@@ -51,18 +51,29 @@ def redraw(fig):
    pos = np.dstack((x, y))
    rv1g = p[0]*rv1.pdf(pos)
    rv2g = p[1]*rv2.pdf(pos)
+   sum12 = rv1g+rv2g
+   post1 = np.divide(rv1g, sum12)
+   post2 = np.divide(rv2g, sum12)
    fig.clf()
    #plt.set_cmap('seismic')
    ax = fig.add_subplot(111)
    # plot Decision Boundary or Difference of PDFs
-   if drawType.get() == 'Decision Boundary':
-      ax.imshow((rv1g>rv2g).T, origin='lower', extent=[xlim[0], xlim[1], ylim[0], ylim[1]], cmap='bwr')
-      fig.suptitle('Decision Boundary')
-   else:
+   plotType = drawType.get()
+   if plotType == 'Decision Boundary':
+      ax.imshow((post1>post2).T, origin='lower', extent=[xlim[0], xlim[1], ylim[0], ylim[1]], cmap='bwr')
+      fig.suptitle(plotType)
+   elif plotType == 'PDF difference':
       maxdata = np.max(np.abs(rv1g-rv2g))
       cax = ax.imshow((rv1g-rv2g).T, origin='lower', extent=[xlim[0], xlim[1], ylim[0], ylim[1]], cmap='Spectral_r', vmin=-maxdata, vmax=maxdata)
       fig.colorbar(cax)
-      fig.suptitle('PDF_1 - PDF_2')
+      fig.suptitle('P(1)p(x|1) - P(2)p(x|2)')
+   elif plotType == 'Posterior difference':
+      maxdata = np.max(np.abs(post1-post2))
+      cax = ax.imshow((post1-post2).T, origin='lower', extent=[xlim[0], xlim[1], ylim[0], ylim[1]], cmap='Spectral_r', vmin=-maxdata, vmax=maxdata)
+      fig.colorbar(cax)
+      fig.suptitle('P(1|x) - P(2|x)')
+   else:
+      messagebox.showerror("Error!", "Plot type not supported")
    ax.text(mu1[0], mu1[1], '+', color='white', horizontalalignment='center', verticalalignment='center')
    ax.text(mu2[0], mu2[1], 'o', color='white', horizontalalignment='center', verticalalignment='center')
    ax.set_xlabel('x')
@@ -145,7 +156,7 @@ s2xyW = ttk.Entry(gaussian2Frame, textvariable=s2xy, width=entryWidth, font=defa
 s2yxW = ttk.Entry(gaussian2Frame, textvariable=s2xy, width=entryWidth, font=defaultFont)
 drawingFrame = ttk.LabelFrame(controlFrame, text='Drawing')
 drawTypeW = ttk.Combobox(drawingFrame, textvariable=drawType, font=defaultFont)
-drawTypeW['values'] = ('Decision Boundary', 'PDF Difference')
+drawTypeW['values'] = ('Decision Boundary', 'PDF difference', 'Posterior difference')
 drawPDFContourW = ttk.Checkbutton(drawingFrame, text="Draw PDF Contours", variable=drawPDFContour)
 xlimFrame = ttk.Frame(drawingFrame)
 xlimL = ttk.Label(xlimFrame, text='xlim')
