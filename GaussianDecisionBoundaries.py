@@ -23,7 +23,7 @@ from tkinter import messagebox
 #import matplotlib.backends.backend_tkagg as tkagg
 
 def about():
-   aboutText = "GaussianDecisionBoundaries.py\n\n(C) 2017 Giampiero Salvi\n\nDraws the decision boundary between two Gaussian distributions according to the Maximum a Posteriori criterion. You can change the a priori probabilities, the mean vectors and covariance matrices. You can also show the difference between the two Probability Densidty Functions (PDFs) and display contours of the original PDFs."
+   aboutText = "GaussianDecisionBoundaries.py\n\n(C) 2017 Giampiero Salvi\n\nDraws the decision boundary between two Gaussian distributions according to the Maximum a Posteriori criterion. You can change the a priori probabilities, the mean vectors and covariance matrices. You can also show the difference between the two Probability Densidty Functions (PDFs) and display contours of the original PDFs.\n\nSource code at: https://github.com/giampierosalvi/GaussianDecisionBoundaries"
    messagebox.showinfo("About", aboutText)
 
 def redraw(fig):
