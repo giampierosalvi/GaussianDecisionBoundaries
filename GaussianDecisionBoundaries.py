@@ -115,25 +115,28 @@ ymin = tk.StringVar()
 ymax = tk.StringVar()
 
 # set default values
-p1.set('0.5')
-mu1x.set('-1.0')
-mu1y.set('-1.0')
-s1x.set('1.0')
-s1y.set('1.0')
-s1xy.set('0.0')
-p2.set('0.5')
-mu2x.set('1.0')
-mu2y.set('1.0')
-s2x.set('1.0')
-s2y.set('1.0')
-s2xy.set('0.0')
-drawType.set('Decision Boundary')
-drawPDFContour.set(True)
-xmin.set("-1.5")
-xmax.set("1.5")
-ymin.set("-1.5")
-ymax.set("1.5")
+def reset():
+   p1.set('0.5')
+   mu1x.set('-1.0')
+   mu1y.set('-1.0')
+   s1x.set('1.0')
+   s1y.set('1.0')
+   s1xy.set('0.0')
+   p2.set('0.5')
+   mu2x.set('1.0')
+   mu2y.set('1.0')
+   s2x.set('1.0')
+   s2y.set('1.0')
+   s2xy.set('0.0')
+   drawType.set('Decision Boundary')
+   drawPDFContour.set(True)
+   xmin.set("-1.5")
+   xmax.set("1.5")
+   ymin.set("-1.5")
+   ymax.set("1.5")
 
+reset()
+      
 # create control widgets
 entryWidth=5
 controlFrame = ttk.Frame(root)
@@ -168,6 +171,7 @@ yminW = ttk.Entry(ylimFrame, textvariable=ymin, width=entryWidth, font=defaultFo
 ymaxW = ttk.Entry(ylimFrame, textvariable=ymax, width=entryWidth, font=defaultFont)
 redrawButton = ttk.Button(drawingFrame, text="Redraw", command=lambda: redraw(fig))
 aboutButton = ttk.Button(controlFrame, text="About...", command=about)
+resetButton = ttk.Button(controlFrame, text="Reset", command=reset)
 
 # place widgets within gaussian1Frame
 gaussian1Frame.grid(column=0, row=0, columnspan=2, rowspan=6)
@@ -219,6 +223,7 @@ gaussian2Frame.pack(side="left")
 
 # place gfame and drawing frame within controlFrame
 aboutButton.pack(side="top")
+resetButton.pack(side="top")
 gaussianFrame.pack(side="top")
 drawingFrame.pack(side="top")
 
