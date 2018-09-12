@@ -10,7 +10,7 @@
 # - adjust axis limits depending on the Gaussian parameters
 # - clean up and simplify the code
 #
-# (C) 2017 Giampiero Salvi <giampi@kth.se>
+# (C) 2017-2018 Giampiero Salvi <giampi@kth.se>
 import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter import font
@@ -174,7 +174,6 @@ aboutButton = ttk.Button(controlFrame, text="About...", command=about)
 resetButton = ttk.Button(controlFrame, text="Reset", command=reset)
 
 # place widgets within gaussian1Frame
-gaussian1Frame.grid(column=0, row=0, columnspan=2, rowspan=6)
 p1L = ttk.Label(gaussian1Frame, text='p1')
 p1L.grid(row=0, column=0)
 p1W.grid(row=0, column=1)
@@ -190,7 +189,6 @@ s1yxW.grid(row=5, column=0)
 s1yW.grid(row=5, column=1)
 
 # place widgets within gaussian2Frame
-gaussian2Frame.grid(column=0, row=0, columnspan=2, rowspan=6)
 p2L = ttk.Label(gaussian2Frame, text='p2 = 1-p1')
 p2L.grid(row=0, column=0, columnspan=2)
 mu2L = ttk.Label(gaussian2Frame, text='mean2')
@@ -218,8 +216,8 @@ ylimFrame.pack(side="top")
 redrawButton.pack(side="top")
 
 # place Gaussian frames within gaussianFrame
-#gaussian1Frame.pack(side="left")
-#gaussian2Frame.pack(side="left")
+gaussian1Frame.pack(side="left")
+gaussian2Frame.pack(side="left")
 
 # place gfame and drawing frame within controlFrame
 aboutButton.pack(side="top")
@@ -233,7 +231,7 @@ figureFrame = tk.Frame(root)
 fig = plt.Figure()
 canvas = FigureCanvasTkAgg(fig, master=root)
 #tkagg.NavigationToolbar2TkAgg(canvas, root)
-canvas.show()
+canvas.draw()
 canvas.get_tk_widget().pack(side='top', fill='both', expand=1)
 figureFrame.pack()
 redraw(fig)
