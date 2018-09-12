@@ -39,12 +39,12 @@ def redraw(fig):
    try:
       rv1 = multivariate_normal(mu1, s1)
    except (ValueError, np.linalg.LinAlgError) as e:
-      messagebox.showerror("Error!", "Covariance matrix must be positive semidefinite (Gaussian 1)")
+      messagebox.showerror("Error!", "Covariance matrix must be positive definite (Gaussian 1)")
       return
    try:
       rv2 = multivariate_normal(mu2, s2)
    except (ValueError, np.linalg.LinAlgError) as e:
-      messagebox.showerror("Error!", "Covariance matrix must be positive semidefinite (Gaussian 2)")
+      messagebox.showerror("Error!", "Covariance matrix must be positive definite (Gaussian 2)")
       return
    # Compute PDF for a certain range of x and y
    xlim = [float(xmin.get()), float(xmax.get())]
