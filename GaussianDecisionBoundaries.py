@@ -218,8 +218,8 @@ ylimFrame.pack(side="top")
 redrawButton.pack(side="top")
 
 # place Gaussian frames within gaussianFrame
-gaussian1Frame.pack(side="left")
-gaussian2Frame.pack(side="left")
+#gaussian1Frame.pack(side="left")
+#gaussian2Frame.pack(side="left")
 
 # place gfame and drawing frame within controlFrame
 aboutButton.pack(side="top")
