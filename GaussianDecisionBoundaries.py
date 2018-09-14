@@ -1,17 +1,26 @@
 #!/usr/bin/env python
 # GaussianDecisionBoundaries.py
 #
-# Draws the decision boundary between two Gaussian distributions according to the
-# Maximum a Posteriori criterium. You can change the a priori probabilities, the
-# mean vectors and covariance matrices. You can also show the difference between
-# the two Probability Densidty Functions (PDFs) and display contours of the original
-# PDFs.
+# Draws the decision boundary between two Gaussian distributions according to
+# the Maximum a Posteriori criterium. You can change the a priori probabilities,
+# the mean vectors and covariance matrices. You can also show the difference
+# between the two Probability Densidty Functions (PDFs) and display contours
+# of the original PDFs.
 #
-# TODO
-# - adjust axis limits depending on the Gaussian parameters
-# - clean up and simplify the code
+# Copyright (C) 2017-2018 Giampiero Salvi <giampi@kth.se>
 #
-# (C) 2017-2018 Giampiero Salvi <giampi@kth.se>
+#    This program is free software: you can redistribute it and/or modify
+#    it under the terms of the GNU General Public License as published by
+#    the Free Software Foundation, either version 3 of the License, or
+#    (at your option) any later version.
+#
+#    This program is distributed in the hope that it will be useful,
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import tkinter as tk
 import tkinter.ttk as ttk
 from tkinter import font
