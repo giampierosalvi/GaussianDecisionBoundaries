@@ -47,12 +47,12 @@ class GaussianDecisionBoundaries(ttk.Frame):
       self.ymin = tk.StringVar()
       self.ymax = tk.StringVar()
       # initialize parameters
-      self.reset()
+      self.set_defaults()
       # initialize user interface
       self.initUI()
 
    # set default values
-   def reset(self):
+   def set_defaults(self):
       self.p1.set('0.5')
       self.mu1x.set('-1.0')
       self.mu1y.set('-1.0')
@@ -111,7 +111,7 @@ class GaussianDecisionBoundaries(ttk.Frame):
       e['ymaxW'] = ttk.Entry(ylimFrame, textvariable=self.ymax, width=entryWidth, font=defaultFont)
       redrawButton = ttk.Button(drawingControlFrame, text="Redraw", command=self.redraw)
       aboutButton = ttk.Button(controlFrame, text="About...", command=self.about)
-      resetButton = ttk.Button(controlFrame, text="Reset", command=self.reset)
+      resetButton = ttk.Button(controlFrame, text="Reset", command=self.set_defaults)
       # bindings
       for key in e.keys():
          e[key].bind('<Return>', self.redraw)
