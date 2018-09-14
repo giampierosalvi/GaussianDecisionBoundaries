@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # GaussianDecisionBoundaries.py
 #
 # Draws the decision boundary between two Gaussian distributions according to the
