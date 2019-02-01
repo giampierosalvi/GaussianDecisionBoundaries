@@ -100,7 +100,7 @@ class GaussianDecisionBoundaries(ttk.Frame):
       e['s1xyW'] = ttk.Entry(gaussian1ParameterFrame, textvariable=self.s1xy, width=entryWidth, font=defaultFont)
       e['s1yxW'] = ttk.Entry(gaussian1ParameterFrame, textvariable=self.s1xy, width=entryWidth, font=defaultFont)
       gaussian2ParameterFrame = ttk.LabelFrame(gaussianParameterFrame, text='Gaussian 2')
-      e['p2W'] = ttk.Label(gaussian2ParameterFrame, text='1-p1')
+      e['p2W'] = ttk.Label(gaussian2ParameterFrame, text='1-P(y1)')
       e['mu2xW'] = ttk.Entry(gaussian2ParameterFrame, textvariable=self.mu2x, width=entryWidth, font=defaultFont)
       e['mu2yW'] = ttk.Entry(gaussian2ParameterFrame, textvariable=self.mu2y, width=entryWidth, font=defaultFont)
       e['s2xW'] = ttk.Entry(gaussian2ParameterFrame, textvariable=self.s2x, width=entryWidth, font=defaultFont)
@@ -127,7 +127,7 @@ class GaussianDecisionBoundaries(ttk.Frame):
          e[key].bind('<Return>', self.redraw)
       drawTypeW.bind("<<ComboboxSelected>>", self.redraw)
       # place widgets within gaussian1ParameterFrame
-      p1L = ttk.Label(gaussian1ParameterFrame, text='p1')
+      p1L = ttk.Label(gaussian1ParameterFrame, text='P(y1)')
       p1L.grid(row=0, column=0)
       e['p1W'].grid(row=0, column=1)
       mu1L = ttk.Label(gaussian1ParameterFrame, text='mean1')
@@ -141,7 +141,7 @@ class GaussianDecisionBoundaries(ttk.Frame):
       e['s1yxW'].grid(row=5, column=0)
       e['s1yW'].grid(row=5, column=1)
       # place widgets within gaussian2ParameterFrame
-      p2L = ttk.Label(gaussian2ParameterFrame, text='p2 = 1-p1')
+      p2L = ttk.Label(gaussian2ParameterFrame, text='P(y2) = 1-P(y1)')
       p2L.grid(row=0, column=0, columnspan=2)
       mu2L = ttk.Label(gaussian2ParameterFrame, text='mean2')
       mu2L.grid(row=1, column=0, columnspan=2)
@@ -230,23 +230,23 @@ class GaussianDecisionBoundaries(ttk.Frame):
          maxdata = np.max(np.abs(np.log(rv1.pdf(pos))-np.log(rv2.pdf(pos))))
          cax = ax.imshow((np.log(rv1.pdf(pos)) - np.log(rv2.pdf(pos))).T, origin='lower', extent=[xlim[0], xlim[1], ylim[0], ylim[1]], cmap='Spectral_r', vmin=-maxdata, vmax=maxdata)
          self.fig.colorbar(cax)
-         self.fig.suptitle('log[p(x|1)/p(x|2)]')
+         self.fig.suptitle('log[p(x|y1)/p(x|y2)]')
       elif plotType == 'Scaled Posterior difference':
          maxdata = np.max(np.abs(rv1g-rv2g))
          cax = ax.imshow((rv1g - rv2g).T, origin='lower', extent=[xlim[0], xlim[1], ylim[0], ylim[1]], cmap='Spectral_r', vmin=-maxdata, vmax=maxdata)
          self.fig.colorbar(cax)
-         self.fig.suptitle('P(1)p(x|1) - P(2)p(x|2)')
+         self.fig.suptitle('P(y1)p(x|y1) - P(y2)p(x|y2)')
       elif plotType == 'Posterior':
          maxdata = np.max(np.abs(post1))
          cax = ax.imshow((post1).T, origin='lower', extent=[xlim[0], xlim[1], ylim[0], ylim[1]], cmap='Spectral_r', vmin=0, vmax=1)
          self.fig.colorbar(cax)
-         self.fig.suptitle('P(1|x) ( = 1 - P(2|x) )')
+         self.fig.suptitle('P(y1|x) ( = 1 - P(y2|x) )')
       else:
          messagebox.showerror("Error!", "Plot type not supported")
       ax.text(mu1[0], mu1[1], '+', color='white', horizontalalignment='center', verticalalignment='center')
       ax.text(mu2[0], mu2[1], 'o', color='white', horizontalalignment='center', verticalalignment='center')
-      ax.set_xlabel('x')
-      ax.set_ylabel('y')
+      ax.set_xlabel('x1')
+      ax.set_ylabel('x2')
       # plot contours for each PDF
       if self.drawPDFContour.get():
          ax.contour(x, y, rv1g, colors='w')
