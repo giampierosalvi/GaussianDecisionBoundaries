@@ -109,7 +109,7 @@ class GaussianDecisionBoundaries(ttk.Frame):
       e['s2yxW'] = ttk.Entry(gaussian2ParameterFrame, textvariable=self.s2xy, width=entryWidth, font=defaultFont)
       drawingControlFrame = ttk.LabelFrame(controlFrame, text='Drawing')
       drawTypeW = ttk.Combobox(drawingControlFrame, textvariable=self.drawType, font=defaultFont, postcommand=self.redraw)
-      drawTypeW['values'] = ('Decision Boundary', 'PDF difference', 'Posterior difference')
+      drawTypeW['values'] = ('Decision Boundary', 'Posterior', 'Scaled Posterior difference', 'Log-likelihood ratio')
       drawPDFContourW = ttk.Checkbutton(drawingControlFrame, text="Draw PDF Contours", variable=self.drawPDFContour, command=self.redraw)
       xlimFrame = ttk.Frame(drawingControlFrame)
       xlimL = ttk.Label(xlimFrame, text='xlim')
@@ -226,16 +226,21 @@ class GaussianDecisionBoundaries(ttk.Frame):
       if plotType == 'Decision Boundary':
          ax.imshow((post1>post2).T, origin='lower', extent=[xlim[0], xlim[1], ylim[0], ylim[1]], cmap='bwr')
          self.fig.suptitle(plotType)
-      elif plotType == 'PDF difference':
+      elif plotType == 'Log-likelihood ratio':
+         maxdata = np.max(np.abs(np.log(rv1.pdf(pos))-np.log(rv2.pdf(pos))))
+         cax = ax.imshow((np.log(rv1.pdf(pos)) - np.log(rv2.pdf(pos))).T, origin='lower', extent=[xlim[0], xlim[1], ylim[0], ylim[1]], cmap='Spectral_r', vmin=-maxdata, vmax=maxdata)
+         self.fig.colorbar(cax)
+         self.fig.suptitle('log[p(x|1)/p(x|2)]')
+      elif plotType == 'Scaled Posterior difference':
          maxdata = np.max(np.abs(rv1g-rv2g))
-         cax = ax.imshow((rv1g-rv2g).T, origin='lower', extent=[xlim[0], xlim[1], ylim[0], ylim[1]], cmap='Spectral_r', vmin=-maxdata, vmax=maxdata)
+         cax = ax.imshow((rv1g - rv2g).T, origin='lower', extent=[xlim[0], xlim[1], ylim[0], ylim[1]], cmap='Spectral_r', vmin=-maxdata, vmax=maxdata)
          self.fig.colorbar(cax)
          self.fig.suptitle('P(1)p(x|1) - P(2)p(x|2)')
-      elif plotType == 'Posterior difference':
-         maxdata = np.max(np.abs(post1-post2))
-         cax = ax.imshow((post1-post2).T, origin='lower', extent=[xlim[0], xlim[1], ylim[0], ylim[1]], cmap='Spectral_r', vmin=-maxdata, vmax=maxdata)
+      elif plotType == 'Posterior':
+         maxdata = np.max(np.abs(post1))
+         cax = ax.imshow((post1).T, origin='lower', extent=[xlim[0], xlim[1], ylim[0], ylim[1]], cmap='Spectral_r', vmin=0, vmax=1)
          self.fig.colorbar(cax)
-         self.fig.suptitle('P(1|x) - P(2|x)')
+         self.fig.suptitle('P(1|x) ( = 1 - P(2|x) )')
       else:
          messagebox.showerror("Error!", "Plot type not supported")
       ax.text(mu1[0], mu1[1], '+', color='white', horizontalalignment='center', verticalalignment='center')
