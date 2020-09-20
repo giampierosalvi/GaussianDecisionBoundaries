@@ -7,7 +7,7 @@
 # between the two Probability Densidty Functions (PDFs) and display contours
 # of the original PDFs.
 #
-# Copyright (C) 2017-2018 Giampiero Salvi <giampi@kth.se>
+# Copyright (C) 2017-2020 Giampiero Salvi <giampi@kth.se>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -193,7 +193,7 @@ class GaussianDecisionBoundaries(ttk.Frame):
       self.redraw()
       
    def about(self):
-      aboutText = "GaussianDecisionBoundaries.py\n\n(C) 2017-2018 Giampiero Salvi\n\nDraws the decision boundary between two Gaussian distributions according to the Maximum a Posteriori criterion. You can change the a priori probabilities, the mean vectors and covariance matrices. You can also show the difference between the two Probability Densidty Functions (PDFs) and display contours of the original PDFs.\n\nSource code at: https://github.com/giampierosalvi/GaussianDecisionBoundaries"
+      aboutText = "GaussianDecisionBoundaries.py\n\n(C) 2017-2020 Giampiero Salvi <giampisalvi@gmail.com>\n\nDraws the decision boundary between two Gaussian distributions according to the Maximum a Posteriori criterion. You can change the a priori probabilities, the mean vectors and covariance matrices. You can also show the difference between the two Probability Densidty Functions (PDFs) and display contours of the original PDFs.\n\nSource code at: https://github.com/giampierosalvi/GaussianDecisionBoundaries"
       messagebox.showinfo("About", aboutText)
       
    def redraw(self, event=None):
