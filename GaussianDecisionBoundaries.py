@@ -52,10 +52,11 @@ class GaussianDecisionBoundaries(ttk.Frame):
       # drawing parameters
       self.drawType = tk.StringVar()
       self.drawPDFContour = tk.BooleanVar()
-      self.xmin = tk.StringVar()
-      self.xmax = tk.StringVar()
-      self.ymin = tk.StringVar()
-      self.ymax = tk.StringVar()
+      self.zoom = tk.StringVar()
+      #self.xmin = tk.StringVar()
+      #self.xmax = tk.StringVar()
+      #self.ymin = tk.StringVar()
+      #self.ymax = tk.StringVar()
       # initialize parameters
       self.set_defaults()
       # initialize user interface
@@ -77,10 +78,11 @@ class GaussianDecisionBoundaries(ttk.Frame):
       self.s2xy.set('0.0')
       self.drawType.set('Decision Boundary')
       self.drawPDFContour.set(True)
-      self.xmin.set("-1.5")
-      self.xmax.set("1.5")
-      self.ymin.set("-1.5")
-      self.ymax.set("1.5")
+      self.zoom.set("1.0")
+      #self.xmin.set("-1.5")
+      #self.xmax.set("1.5")
+      #self.ymin.set("-1.5")
+      #self.ymax.set("1.5")
 
    def initUI(self):
       # set default font size
@@ -111,14 +113,17 @@ class GaussianDecisionBoundaries(ttk.Frame):
       drawTypeW = ttk.Combobox(drawingControlFrame, textvariable=self.drawType, font=defaultFont, postcommand=self.redraw)
       drawTypeW['values'] = ('Decision Boundary', 'Posterior', 'Scaled Posterior difference', 'Log-likelihood ratio')
       drawPDFContourW = ttk.Checkbutton(drawingControlFrame, text="Draw PDF Contours", variable=self.drawPDFContour, command=self.redraw)
-      xlimFrame = ttk.Frame(drawingControlFrame)
-      xlimL = ttk.Label(xlimFrame, text='xlim')
-      e['xminW'] = ttk.Entry(xlimFrame, textvariable=self.xmin, width=entryWidth, font=defaultFont)
-      e['xmaxW'] = ttk.Entry(xlimFrame, textvariable=self.xmax, width=entryWidth, font=defaultFont)
-      ylimFrame = ttk.Frame(drawingControlFrame)
-      ylimL = ttk.Label(ylimFrame, text='ylim')
-      e['yminW'] = ttk.Entry(ylimFrame, textvariable=self.ymin, width=entryWidth, font=defaultFont)
-      e['ymaxW'] = ttk.Entry(ylimFrame, textvariable=self.ymax, width=entryWidth, font=defaultFont)
+      zoomFrame = ttk.Frame(drawingControlFrame)
+      zoomL = ttk.Label(zoomFrame, text='zoom')
+      e['zoomW'] = ttk.Entry(zoomFrame, textvariable=self.zoom, width=entryWidth, font=defaultFont)
+      #xlimFrame = ttk.Frame(drawingControlFrame)
+      #xlimL = ttk.Label(xlimFrame, text='xlim')
+      #e['xminW'] = ttk.Entry(xlimFrame, textvariable=self.xmin, width=entryWidth, font=defaultFont)
+      #e['xmaxW'] = ttk.Entry(xlimFrame, textvariable=self.xmax, width=entryWidth, font=defaultFont)
+      #ylimFrame = ttk.Frame(drawingControlFrame)
+      #ylimL = ttk.Label(ylimFrame, text='ylim')
+      #e['yminW'] = ttk.Entry(ylimFrame, textvariable=self.ymin, width=entryWidth, font=defaultFont)
+      #e['ymaxW'] = ttk.Entry(ylimFrame, textvariable=self.ymax, width=entryWidth, font=defaultFont)
       redrawButton = ttk.Button(drawingControlFrame, text="Redraw", command=self.redraw)
       aboutButton = ttk.Button(controlFrame, text="About...", command=self.about)
       resetButton = ttk.Button(controlFrame, text="Reset", command=self.set_defaults)
@@ -156,14 +161,17 @@ class GaussianDecisionBoundaries(ttk.Frame):
       # place widgets within drawing frame
       drawTypeW.pack(side="top")
       drawPDFContourW.pack(side="top")
-      xlimL.pack(side="left")
-      e['xminW'].pack(side="left")
-      e['xmaxW'].pack(side="left")
-      xlimFrame.pack(side="top")
-      ylimL.pack(side="left")
-      e['yminW'].pack(side="left")
-      e['ymaxW'].pack(side="left")
-      ylimFrame.pack(side="top")
+      zoomL.pack(side="left")
+      e['zoomW'].pack(side="left")
+      zoomFrame.pack(side="top")
+      #xlimL.pack(side="left")
+      #e['xminW'].pack(side="left")
+      #e['xmaxW'].pack(side="left")
+      #xlimFrame.pack(side="top")
+      #ylimL.pack(side="left")
+      #e['yminW'].pack(side="left")
+      #e['ymaxW'].pack(side="left")
+      #ylimFrame.pack(side="top")
       redrawButton.pack(side="top")
       # place Gaussian frames within gaussianParameterFrame
       gaussian1ParameterFrame.pack(side="left")
@@ -209,8 +217,15 @@ class GaussianDecisionBoundaries(ttk.Frame):
          messagebox.showerror("Error!", "Covariance matrix must be positive definite (Gaussian 2)")
          return
       # Compute PDF for a certain range of x and y
-      xlim = [float(self.xmin.get()), float(self.xmax.get())]
-      ylim = [float(self.ymin.get()), float(self.ymax.get())]
+      #xlim = [float(self.xmin.get()), float(self.xmax.get())]
+      #ylim = [float(self.ymin.get()), float(self.ymax.get())]
+      zoom = float(self.zoom.get())
+      center = (mu1+mu2)/2
+      distance = np.abs(mu1-mu2).max()
+      if distance == 0:
+         distance = 1.0
+      xlim = [center[0]-distance*zoom, center[0]+distance*zoom]
+      ylim = [center[1]-distance*zoom, center[1]+distance*zoom]
       x, y = np.mgrid[xlim[0]:xlim[1]:(xlim[1]-xlim[0])/500.0, ylim[0]:ylim[1]:(ylim[1]-ylim[0])/500.0]
       pos = np.dstack((x, y))
       rv1g = p[0]*rv1.pdf(pos)
