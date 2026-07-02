@@ -245,23 +245,23 @@ class GaussianDecisionBoundaries(ttk.Frame):
          maxdata = np.max(np.abs(np.log(rv1.pdf(pos))-np.log(rv2.pdf(pos))))
          cax = ax.imshow((np.log(rv1.pdf(pos)) - np.log(rv2.pdf(pos))).T, origin='lower', extent=[xlim[0], xlim[1], ylim[0], ylim[1]], cmap='Spectral_r', vmin=-maxdata, vmax=maxdata)
          self.fig.colorbar(cax)
-         self.fig.suptitle('$\log[p(x|t=c_1)/p(x|t=c_2)]$')
+         self.fig.suptitle(r'$\log[p(x|t=c_1)/p(x|t=c_2)]$')
       elif plotType == 'Scaled Posterior difference':
          maxdata = np.max(np.abs(rv1g-rv2g))
          cax = ax.imshow((rv1g - rv2g).T, origin='lower', extent=[xlim[0], xlim[1], ylim[0], ylim[1]], cmap='Spectral_r', vmin=-maxdata, vmax=maxdata)
          self.fig.colorbar(cax)
-         self.fig.suptitle('$P(t=c_1)p(x|t=c_1) - P(t=c_2)p(x|t=c_2)$')
+         self.fig.suptitle(r'$P(t=c_1)p(x|t=c_1) - P(t=c_2)p(x|t=c_2)$')
       elif plotType == 'Posterior':
          maxdata = np.max(np.abs(post1))
          cax = ax.imshow((post1).T, origin='lower', extent=[xlim[0], xlim[1], ylim[0], ylim[1]], cmap='Spectral_r', vmin=0, vmax=1)
          self.fig.colorbar(cax)
-         self.fig.suptitle('$P(t=c_1|x) \quad ( = 1 - P(t=c_2|x) )$')
+         self.fig.suptitle(r'$P(t=c_1|x) \quad ( = 1 - P(t=c_2|x) )$')
       else:
          messagebox.showerror("Error!", "Plot type not supported")
       ax.text(mu1[0], mu1[1], '+', color='white', horizontalalignment='center', verticalalignment='center')
       ax.text(mu2[0], mu2[1], 'o', color='white', horizontalalignment='center', verticalalignment='center')
-      ax.set_xlabel('$x_1$')
-      ax.set_ylabel('$x_2$')
+      ax.set_xlabel(r'$x_1$')
+      ax.set_ylabel(r'$x_2$')
       # plot contours for each PDF
       if self.drawPDFContour.get():
          ax.contour(x, y, rv1g, colors='w')
